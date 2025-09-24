@@ -1,3 +1,6 @@
+from itertools import product
+import itertools
+
 class Factor:
     def __init__(self, variables, values):
         self.variables = variables
@@ -25,7 +28,12 @@ class Factor:
 
 def events(vars, domains):
     """TODO: Implement this for Question One."""
-
+   # combinations = list(itertools.product(*domains.values()))
+    output = dict(zip(vars,domains.values()))
+    combinations = list(itertools.product(*output))
+    print(combinations)
+    
+        
 
 def marginalize(factor, variable):
     """TODO: Implement this for Question Two."""
@@ -33,3 +41,7 @@ def marginalize(factor, variable):
 
 def multiply_factors(factors, domains):
     """TODO: Implement this for Question Three."""
+
+varstest = ['C', 'W']
+domainstest = {'C':["1","2","3"],'W':["yes","no"]}
+events(varstest,domainstest)
