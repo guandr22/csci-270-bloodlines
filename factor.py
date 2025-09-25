@@ -36,6 +36,25 @@ def events(vars, domains):
     
 def marginalize(factor, variable):
     """TODO: Implement this for Question Two."""
+    """
+    Takes in a Factor object and a specified variable.
+    Returns a new Factor object without that specified variable and, 
+    accordingly, with all remaining joint probabilities consolidated
+    in response to missing one variable.
+    """
+    
+    """
+    pseudocode: 
+
+    start with a new empty dictionary 
+    go through the entries in factor.values
+    start copying over those entries to the new dictionary:
+        if an entry shares the non-removed variable values with an existing entry,
+            add the entry's value to the existing entry
+        otherwise,
+            create a new entry with the same variables, minus the variable we're removing
+    remove the variable from factor.variables.
+    """
 
 
 def multiply_factors(factors, domains):
