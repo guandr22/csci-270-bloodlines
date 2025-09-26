@@ -58,13 +58,14 @@ def marginalize(factor, variable):
     new_values = {}
     new_variables = [var for var in factor.variables if var != variable]
 
+    # iterate through the entries in factor.values
     for event, value in factor.values.items():
 
         # create new event without the marginalized variable
         old_event_with_variables = zip(factor.variables, event)
         new_event = tuple(val for var, val in old_event_with_variables if var != variable) 
         if new_event in new_values:
-            new_values[new_event] += value
+            new_values[new_event] += value # consolidate the probabilities
         else:
             new_values[new_event] = value
 
