@@ -55,6 +55,20 @@ def marginalize(factor, variable):
             create a new entry with the same variables, minus the variable we're removing
     remove the variable from factor.variables.
     """
+    new_values = {}
+    new_variables = [var for var in factor.variables if var != variable]
+
+    for event, value in factor.values.items():
+
+        # create new event without the marginalized variable
+        old_event_with_variables = zip(factor.variables, event)
+        new_event = tuple(val for var, val in old_event_with_variables if var != variable) 
+        if new_event in new_values:
+            new_values[new_event] += value
+        else:
+            new_values[new_event] = value
+
+    return Factor(new_variables, new_values)
 
 
 def multiply_factors(factors, domains):
