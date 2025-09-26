@@ -47,13 +47,14 @@ def marginalize(factor, variable):
     pseudocode: 
 
     start with a new empty dictionary 
+    and a new list of variables without the variable we're removing
     go through the entries in factor.values
     start copying over those entries to the new dictionary:
         if an entry shares the non-removed variable values with an existing entry,
             add the entry's value to the existing entry
         otherwise,
             create a new entry with the same variables, minus the variable we're removing
-    remove the variable from factor.variables.
+    return a new factor object with the new list of variables and the new dictionary
     """
     new_values = {}
     new_variables = [var for var in factor.variables if var != variable]
