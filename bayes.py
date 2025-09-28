@@ -1,3 +1,6 @@
+from factor import *
+from util import compute_elimination_order
+
 class BayesianNetwork:
     """Represents a Bayesian network by its factors, i.e. the conditional probability tables (CPTs).
 
@@ -39,6 +42,21 @@ def eliminate(bnet, variable):
     """
     # TODO: Implement this for Question Four.
 
+    # Find all factors with our target variable
+    factors_with_variable = [factor for factor in bnet.factors if variable in factor.variables]
+
+    # Multiply those factors together
+    multiplied_factor = multiply_factors(factors_with_variable, bnet.domains)
+
+    # Marginalize out the target variable from the multiplied factor
+    marginalized_factor = marginalize(multiplied_factor, variable)
+
+    # Create a new list of factors for the new Bayesian network, excluding the old factors with the target variable
+    new_factors = [factor for factor in bnet.factors if variable not in factor.variables]
+    new_factors.append(marginalized_factor)
+
+    return BayesianNetwork(new_factors, bnet.domains)
+
 
 def compute_marginal(bnet, vars):
     """Computes the marginal probability over the specified variables.
@@ -51,8 +69,14 @@ def compute_marginal(bnet, vars):
         the variables that we want to compute the marginal over
     """
     # TODO: Implement this for Question Five.
-    
-    
+
+    # get the elimination order and moral graph (see util.py; we use the moral graph later)
+    elim_order, _ = compute_elimination_order(bnet) 
+    revised_elim_order = [var for var in elim_order if var not in vars]
+    for var in revised_elim_order:
+        bnet = eliminate(bnet, var)
+    return multiply_factors(bnet.factors, bnet.domains)
+
 def compute_conditional(bnet, event, evidence):
     """Computes the conditional probability of an event given the evidence event."""
     # TODO: Implement this for Question Five.

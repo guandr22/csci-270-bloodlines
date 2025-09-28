@@ -78,11 +78,11 @@ def marginalize(factor, variable):
 def multiply_factors(factors, domains):
     """TODO: Implement this for Question Three."""
     """
-    Takes in a list of two factors and a dictionary mapping variables to domains. 
+    Takes in a list of two or more factors and a dictionary mapping variables to domains. 
     Produces a new factor wherein:
         1. For example, if variables x and y are in Factor 1 and variables y and z are in Factor 2,
         the new factor will have variables x, y, and z.
-            We can generalize this to more than two variables in Factor 1 and Factor 2.
+            We can generalize this to more than two variables in Factor 1 and Factor 2 and to more than two factors.
         2. The probability value of a given combination of x, y, and z will be the product
         of the probabilities of the combinations of x and y in Factor 1 and y and z in Factor 2.
             We can also generalize this to more than three variables in our new factor.
