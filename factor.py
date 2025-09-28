@@ -105,6 +105,9 @@ def multiply_factors(factors, domains):
             # extract the relevant part of the event for the current factor
             sub_event = {var: event[var] for var in factor.variables}
             prob *= factor[sub_event]
-        new_values[tuple(event[var] for var in new_variables)] = prob
+        new_values[tuple(event[var] for var in new_variables)] = prob 
+        # add the new event and its probability to the new values dictionary
+        # not going to lie, though, co-pilot did all the weird Python shit for me here - 
+        # I only really know what's going on conceptually
 
     return Factor(new_variables, new_values)
