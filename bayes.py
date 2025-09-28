@@ -81,6 +81,62 @@ def compute_marginal(bnet, vars):
     # multiply the remaining factors to get our marginal distribution
     return multiply_factors(bnet.factors, bnet.domains)
 
+def extract_probability(factor, event):
+    """Helper function that extracts the probability of a specific event from a factor.
+
+    Parameters
+    ----------
+    factor : factor.Factor
+        the factor from which to extract the probability
+    event : dict[str, str]
+        a dictionary mapping variable names to values, representing the event whose probability we want to extract
+
+    Returns
+    -------
+    float
+        the probability of the specified event according to the given factor
+    """
+
+    vars_in_event = set(event.keys())
+    if set(factor.variables) != vars_in_event:
+        raise ValueError("The variables in the event must match the variables in the factor.")
+
+    # create a tuple of values corresponding to the order of variables in the factor
+    event_tuple = tuple(event[var] for var in factor.variables)
+
+    return factor.values.get(event_tuple, 0.0) #0.0 if event_tuple not in factor.values
+
 def compute_conditional(bnet, event, evidence):
     """Computes the conditional probability of an event given the evidence event."""
     # TODO: Implement this for Question Five.
+    """
+    event: dict mapping variable names to values (e.g. {"X": "A", "Y": "AB", "Z": "B"} in our example about blood.)
+    evidence: another dict mapping variable names to values (e.g. {"Y": "AB"} in our example about blood.), serving
+        as the event(s) whose probability will become the denominator in our conditional probability calculation.
+
+    returns: float, the conditional probability P(event | evidence)
+
+    Our strategy relies on the definition of conditional probability:
+        We'll calculate the joint probability of the event AND the evidence, then 
+        divide that by the probability of the evidence.
+    """
+
+    # calculate the joint probability of event and evidence
+    joint_event = {**event, **evidence} # merge the two dictionaries
+    joint_vars = set(joint_event.keys())
+    joint_marginal = compute_marginal(bnet, joint_vars)
+
+    joint_prob = extract_probability(joint_marginal, joint_event)
+    
+
+    # calculate the marginal probability of evidence
+    evidence_vars = set(evidence.keys())
+    evidence_marginal = compute_marginal(bnet, evidence_vars)
+
+    evidence_prob = extract_probability(evidence_marginal, evidence)
+
+    if evidence_prob == 0.0:
+        return 0.0  # avoid division by zero
+
+    # apply the definition of conditional probability
+    return joint_prob / evidence_prob
