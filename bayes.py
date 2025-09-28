@@ -57,7 +57,6 @@ def eliminate(bnet, variable):
 
     return BayesianNetwork(new_factors, bnet.domains)
 
-
 def compute_marginal(bnet, vars):
     """Computes the marginal probability over the specified variables.
 
@@ -70,11 +69,16 @@ def compute_marginal(bnet, vars):
     """
     # TODO: Implement this for Question Five.
 
-    # get the elimination order and moral graph (see util.py; we use the moral graph later)
+    # get the elimination order and moral graph (see util.py; we don't use the moral graph here)
     elim_order, _ = compute_elimination_order(bnet) 
+
+    # revise the elimination order such that we only eliminate variables 
+    # not included in our marginal probability calculation
     revised_elim_order = [var for var in elim_order if var not in vars]
     for var in revised_elim_order:
         bnet = eliminate(bnet, var)
+
+    # multiply the remaining factors to get our marginal distribution
     return multiply_factors(bnet.factors, bnet.domains)
 
 def compute_conditional(bnet, event, evidence):
