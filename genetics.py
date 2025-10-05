@@ -1,4 +1,5 @@
 from bayes import BayesianNetwork
+from factor import *
 
 
 class FamilyMember:
@@ -132,6 +133,57 @@ def create_hemophilia_cpt(person):
         a Factor specifying the probability of hemophilia, given one's genotype
     """
     # TODO: Implement this for Question Seven.
+    """pseudocode:
+    a Factor needs a variable list and a values dict, with our variables being G_person and H_person
+    initialize variable list as ["G_person", "H_person"]
+    initialize values dict as empty dict
+
+    person only gives us a name and a sex
+
+    check the sex of the person
+    if the person's a male, the possible genotypes are "xy" and "Xy"
+        add to values_dict:
+            ("xy", "+") -> 0.0
+            ("xy", "-") -> 1.0
+            ("Xy", "+") -> 1.0
+            ("Xy", "-") -> 0.0
+    if the person's a female, the possible genotypes are "xx", "xX", and "XX"
+        add to values_dict:
+            ("xx", "+") -> 0.0
+            ("xx", "-") -> 1.0
+
+            ("xX", "+") -> 0.0
+            ("xX", "-") -> 1.0
+
+            ("XX", "-") -> 0.0
+            ("XX", "+") -> 1.0
+
+    return a Factor with the variable list and values dict
+    """
+    name = person.get_name()
+    variable_list = [f"G_{name}", f"H_{name}"]
+    values_dict = {}
+
+    # a male needs only one uppercase X chromosome to have hemophilia
+    if person.get_sex() == "male":
+        values_dict[("xy", "+")] = 0.0
+        values_dict[("xy", "-")] = 1.0
+
+        values_dict[("Xy", "+")] = 1.0
+        values_dict[("Xy", "-")] = 0.0
+
+    # a female needs two uppercase X chromosomes to have hemophilia
+    elif person.get_sex() == "female":
+        values_dict[("xx", "+")] = 0.0
+        values_dict[("xx", "-")] = 1.0
+
+        values_dict[("xX", "+")] = 0.0
+        values_dict[("xX", "-")] = 1.0
+
+        values_dict[("XX", "+")] = 1.0
+        values_dict[("XX", "-")] = 0.0
+
+    return Factor(variable_list, values_dict)
 
 
 def create_genotype_cpt(person):
