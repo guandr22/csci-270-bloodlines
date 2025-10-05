@@ -290,7 +290,46 @@ def create_maternal_inheritance_cpt(person):
         a Factor specifying the probability of the gene inherited from the family member's mother.
     """
     # TODO: Implement this for Question Nine.
+    """
+    pseudocode:
+    we've got two kinds of people here:
+        those with no known mother
+            in this case, the variable list is just ["M_person"]
+            values dict is:
+                ("x") -> 29999/30000
+                ("X") -> 1/30000
+        those with a known mother
+            in this case, the variable list is ["G_mother", "M_person"]
+            values dict is:
+                ("xx", "x") -> 1.0
+                ("xx", "X") -> 0.0
 
+                ("xX", "x") -> 0.5
+                ("xX", "X") -> 0.5
+
+                ("XX", "x") -> 0.0
+                ("XX", "X") -> 1.0
+    return a Factor with the variable list and values dict
+    """
+    name = person.get_name()
+    values_dict = {}
+    if person.mother is None:
+        variable_list = [f"M_{name}"]
+        values_dict[("x",)] = 29999/30000
+        values_dict[("X",)] = 1/30000
+    else:
+        mother_name = person.mother.get_name()
+        variable_list = [f"G_{mother_name}", f"M_{name}"]
+        values_dict[("xx", "x")] = 1.0
+        values_dict[("xx", "X")] = 0.0
+
+        values_dict[("xX", "x")] = 0.5
+        values_dict[("xX", "X")] = 0.5
+
+        values_dict[("XX", "x")] = 0.0
+        values_dict[("XX", "X")] = 1.0
+
+    return Factor(variable_list, values_dict)
 
 def create_paternal_inheritance_cpt(person):
     """Creates a conditional probability table (CPT) specifying the probability of the gene inherited from one's father.
