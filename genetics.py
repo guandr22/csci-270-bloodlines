@@ -134,6 +134,11 @@ def create_hemophilia_cpt(person):
     """
     # TODO: Implement this for Question Seven.
     """pseudocode:
+
+    this is pretty brute-force. there's probably a way we can do fun itertools stuff, but I'm having trouble
+    with the fact that create_variable_domains() takes in a family, not a person.
+
+
     a Factor needs a variable list and a values dict, with our variables being G_person and H_person
     initialize variable list as ["G_person", "H_person"]
     initialize values dict as empty dict
