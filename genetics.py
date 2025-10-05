@@ -200,7 +200,76 @@ def create_genotype_cpt(person):
         a Factor specifying the probability of a genotype, given one's inherited genes
     """
     # TODO: Implement this for Question Eight.
+    """
+    pseudocode:
+    check the sex of the person
+        if male, variable list is ["M_person", "G_person"]
+        if female, variable list is ["M_person", "P_person", "G_person"]
 
+    initialize empty values dict
+
+    if male:
+        possible maternally inherited genes: "x", "X"
+        possible genotypes: "xy", "Xy"
+        add to values_dict:
+            ("x", "xy") -> 1.0
+            ("x", "Xy") -> 0.0
+            ("X", "xy") -> 0.0
+            ("X", "Xy") -> 1.0
+    elif female:
+        possible maternally inherited genes: "x", "X"
+        possible paternally inherited genes: "x", "X"
+        possible genotypes: "xx", "xX", "XX"
+        add to values_dict:
+            ("x", "x", "xx") -> 1.0
+            ("x", "x", "xX") -> 0.0
+            ("x", "x", "XX") -> 0.0
+
+            ("x", "X", "xx") -> 0.0
+            ("x", "X", "xX") -> 1.0
+            ("x", "X", "XX") -> 0.0
+
+            ("X", "x", "xx") -> 0.0
+            ("X", "x", "xX") -> 1.0
+            ("X", "x", "XX") -> 0.0
+
+            ("X", "X", "xx") -> 0.0
+            ("X", "X", "xX") -> 0.0
+            ("X", "X", "XX") -> 1.0
+
+    return a Factor with the variable list and values dict
+    """
+
+    name = person.get_name()
+    values_dict = {}
+
+    if person.get_sex() == "male":
+        variable_list = [f"M_{name}", f"G_{name}"]
+        values_dict[("x", "xy")] = 1.0
+        values_dict[("x", "Xy")] = 0.0
+
+        values_dict[("X", "xy")] = 0.0
+        values_dict[("X", "Xy")] = 1.0
+
+    elif person.get_sex() == "female":
+        variable_list = [f"M_{name}", f"P_{name}", f"G_{name}"]
+        values_dict[("x", "x", "xx")] = 1.0
+        values_dict[("x", "x", "xX")] = 0.0
+        values_dict[("x", "x", "XX")] = 0.0
+
+        values_dict[("x", "X", "xx")] = 0.0
+        values_dict[("x", "X", "xX")] = 1.0
+        values_dict[("x", "X", "XX")] = 0.0
+
+        values_dict[("X", "x", "xx")] = 0.0
+        values_dict[("X", "x", "xX")] = 1.0
+        values_dict[("X", "x", "XX")] = 0.0
+
+        values_dict[("X", "X", "xx")] = 0.0
+        values_dict[("X", "X", "xX")] = 0.0
+        values_dict[("X", "X", "XX")] = 1.0
+    
+    return Factor(variable_list, values_dict)
 
 def create_maternal_inheritance_cpt(person):
     """Creates a conditional probability table (CPT) specifying the probability of the gene inherited from one's mother.
