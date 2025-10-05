@@ -82,6 +82,40 @@ def create_variable_domains(family):
         a dictionary mapping each variable to its domain (i.e. its possible values)
     """
     # TODO: Implement this for Question Six.
+    """pseudocode:
+    begin w/empty dict
+    iterate through the family members in family
+        for each member of the family
+            regardless of sex, they should have the maternally inherited gene
+                add M_family_member to the dict
+                map M_family_member to ['x', 'X']
+            check if they're male or female
+                if male:
+                    overall here, I think the guidelines are wrong? 
+                    The male genotype should include a y chromosome, which impacts the probability of getting hemophilia
+                    add G_family_member and H_family_member to the dict
+                    map G_family_member to ['xy', 'Xy']
+                    map H_family_member to ['-', '+']
+                if female:
+                    add P_family_member, G_family_member, and H_family_member to the dict
+                    map P_family_member to ['x', 'X']
+                    map G_family_member to ['xx', 'xX', 'XX']
+                    map H_family_member to ['-', '+']
+    return the dict
+    """
+    variable_domains = {}
+    for member in family:
+        name = member.get_name() # uses the get_name() method in FamilyMember class
+        variable_domains[f"M_{name}"] = ['x', 'X'] # you always have an X chromosome (maternally inherited)
+        if member.get_sex() == "male":
+            variable_domains[f"G_{name}"] = ['xy', 'Xy'] # males have one X and one Y chromosome
+            variable_domains[f"H_{name}"] = ['-', '+']
+        elif member.get_sex() == "female":
+            variable_domains[f"P_{name}"] = ['x', 'X']
+            variable_domains[f"G_{name}"] = ['xx', 'xX', 'XX']
+            variable_domains[f"H_{name}"] = ['-', '+']
+
+    return variable_domains
 
 
 def create_hemophilia_cpt(person):
