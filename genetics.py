@@ -345,7 +345,50 @@ def create_paternal_inheritance_cpt(person):
         a Factor specifying the probability of the gene inherited from the family member's father.
     """
     # TODO: Implement this for Question Ten.
+    """
+    pseudocode:
+    three kinds of people here:
+        men:
+            variable list is ["P_person"]
+            values dict is:
+                ("y") -> 1.0
+        women with no known father:
+            variable list is ["P_person"]
+            values dict is:
+                ("x") -> 29999/30000
+                ("X") -> 1/30000
+        women with a known father:
+            variable list is ["G_father", "P_person"]
+            values dict is:
+                ("xy", "x") -> 1.0
+                ("xy", "X") -> 0.0
 
+                ("Xy", "x") -> 0.0
+                ("Xy", "X") -> 1.0
+    return a Factor with the variable list and values dict
+    """
+    name = person.get_name()
+    values_dict = {}
+    if person.get_sex() == "male":
+        variable_list = [f"P_{name}"]
+        values_dict[("y",)] = 1.0
+            # need to distinguish between the string "x" and the single-value tuple ("x",), as
+            # values_dict keys need to be tuples (see factor.py, line 15)
+    elif person.get_sex() == "female":
+        if person.father is None:
+            variable_list = [f"P_{name}"]
+            values_dict[("x",)] = 29999/30000 
+            values_dict[("X",)] = 1/30000
+        else:
+            father_name = person.father.get_name()
+            variable_list = [f"G_{father_name}", f"P_{name}"]
+            values_dict[("xy", "x")] = 1.0
+            values_dict[("xy", "X")] = 0.0
+
+            values_dict[("Xy", "x")] = 0.0
+            values_dict[("Xy", "X")] = 1.0
+
+    return Factor(variable_list, values_dict)
 
 def create_family_bayes_net(family):
     """Creates a Bayesian network that models the genetic inheritance of hemophilia within a family.
